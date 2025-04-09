@@ -31,6 +31,62 @@
 $ npm install
 ```
 
+## Database Setup
+
+This application uses PostgreSQL as its database. Follow the steps below to set up PostgreSQL:
+
+1. Install PostgreSQL:
+   - On macOS: `brew install postgresql`
+   - On Ubuntu: `sudo apt update && sudo apt install postgresql postgresql-contrib`
+   - On Windows: Download and install from [postgresql.org](https://www.postgresql.org/).
+
+2. Start the PostgreSQL service:
+   - macOS/Linux: `sudo service postgresql start`
+   - Windows: Start the PostgreSQL service from the Services app.
+
+3. Create a new database:
+   ```bash
+   psql -U postgres
+   CREATE DATABASE your_database;
+   ```
+
+4. Update the `app.module.ts` file with your PostgreSQL credentials.
+
+5. Run the application:
+   ```bash
+   npm run start
+   ```
+
+## Database Initialization
+
+To initialize the database with the required schema:
+
+1. Ensure `synchronize: true` is set in the `TypeOrmModule` configuration in `app.module.ts`.
+2. Start the application:
+   ```bash
+   npm run start:dev
+   ```
+   This will automatically create the tables based on the defined entities.
+
+### Optional: Using Migrations
+
+If you prefer using migrations:
+
+1. Generate a migration:
+   ```bash
+   npm run typeorm migration:generate -- -n InitialMigration
+   ```
+
+2. Run the migration:
+   ```bash
+   npm run typeorm migration:run
+   ```
+
+3. Disable `synchronize` in `app.module.ts` to avoid conflicts:
+   ```typescript
+   synchronize: false,
+   ```
+
 ## Compile and run the project
 
 ```bash

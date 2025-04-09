@@ -12,4 +12,5 @@ export declare class UserController {
         accessToken: string;
         message: string;
     }>;
+    getMe(req: any): Promise<any>;
 }

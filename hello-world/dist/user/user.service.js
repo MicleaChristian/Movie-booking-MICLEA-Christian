@@ -8,42 +8,56 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
 const bcrypt = require("bcrypt");
 const jwt_1 = require("@nestjs/jwt");
+const user_entity_1 = require("./entities/user.entity");
 let UserService = class UserService {
+    userRepository;
     jwtService;
-    users = [];
-    constructor(jwtService) {
+    constructor(userRepository, jwtService) {
+        this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
     async register(registerDto) {
-        const { username, password } = registerDto;
-        const userExists = this.users.find((user) => user.username === username);
+        const { username, email, password } = registerDto;
+        const userExists = await this.userRepository.findOne({ where: [{ username }, { email }] });
         if (userExists) {
-            throw new common_1.BadRequestException('User already exists');
+            throw new common_1.BadRequestException('User with this username or email already exists');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        this.users.push({ username, password: hashedPassword });
-        const token = this.jwtService.sign({ username });
+        const user = this.userRepository.create({ username, email, password: hashedPassword });
+        await this.userRepository.save(user);
+        const token = this.jwtService.sign({ username, email });
         return { message: 'User registered successfully', token };
     }
     async login(loginDto) {
-        const { username, password } = loginDto;
-        const user = this.users.find((user) => user.username === username);
+        const { email, password } = loginDto;
+        const user = await this.userRepository.findOne({ where: { email } });
         if (!user || !(await bcrypt.compare(password, user.password))) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
-        const payload = { username };
+        const payload = { username: user.username, email: user.email };
         const token = this.jwtService.sign(payload);
         return { accessToken: token, message: 'User logged in successfully' };
+    }
+    async findByEmail(email) {
+        const user = await this.userRepository.findOne({ where: { email } });
+        return user || undefined;
     }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
+    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        jwt_1.JwtService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

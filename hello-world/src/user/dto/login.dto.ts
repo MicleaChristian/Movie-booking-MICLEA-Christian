@@ -7,6 +7,11 @@ export class LoginDto {
   @IsNotEmpty()
   username: string;
 
+  @ApiProperty({ description: 'The mail of the user' })
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
   @ApiProperty({ description: 'The password of the user' })
   @IsString()
   @IsNotEmpty()

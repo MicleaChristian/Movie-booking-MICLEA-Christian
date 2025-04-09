@@ -14,6 +14,7 @@ const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class RegisterDto {
     username;
+    email;
     password;
 }
 exports.RegisterDto = RegisterDto;
@@ -23,6 +24,12 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "username", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The mail of the user' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The password of the user' }),
     (0, class_validator_1.IsString)(),
