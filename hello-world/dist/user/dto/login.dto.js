@@ -13,25 +13,24 @@ exports.LoginDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class LoginDto {
-    username;
-    email;
+    usernameOrEmail;
     password;
 }
 exports.LoginDto = LoginDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: 'The username of the user' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'The username or email of the user',
+        example: 'john_doe or john.doe@example.com',
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], LoginDto.prototype, "username", void 0);
+], LoginDto.prototype, "usernameOrEmail", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: 'The mail of the user' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], LoginDto.prototype, "email", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ description: 'The password of the user' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'The password of the user',
+        example: 'password123',
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)

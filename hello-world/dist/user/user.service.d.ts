@@ -12,7 +12,8 @@ export declare class UserService {
         token: string;
     }>;
     login(loginDto: LoginDto): Promise<{
-        accessToken: string;
+        user: User;
+        token: string;
         message: string;
     }>;
     findByEmail(email: string): Promise<User | undefined>;

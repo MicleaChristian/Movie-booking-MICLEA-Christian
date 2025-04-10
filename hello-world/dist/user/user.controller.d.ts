@@ -9,7 +9,8 @@ export declare class UserController {
         token: string;
     }>;
     login(loginDto: LoginDto): Promise<{
-        accessToken: string;
+        user: import("./entities/user.entity").User;
+        token: string;
         message: string;
     }>;
     getMe(req: any): Promise<any>;

@@ -22,10 +22,10 @@ export class UserController {
     return this.userService.login(loginDto);
   }
 
-  @ApiOperation({ summary: 'Get the currently signed-in user' })
+  @ApiOperation({ summary: 'Get the currently signed-in users decoded JWT Token' })
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMe(@Req() req: any) {
-    return req.user; // `req.user` contains the decoded JWT payload
+    return req.user;
   }
 }

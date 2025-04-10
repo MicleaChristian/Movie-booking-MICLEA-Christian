@@ -52,7 +52,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "login", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: 'Get the currently signed-in user' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Get the currently signed-in users decoded JWT Token' }),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('me'),
     __param(0, (0, common_1.Req)()),

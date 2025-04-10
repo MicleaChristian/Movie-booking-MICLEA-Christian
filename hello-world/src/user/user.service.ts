@@ -32,16 +32,28 @@ export class UserService {
   }
 
   async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
+    const { usernameOrEmail, password } = loginDto;
 
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    // Find user by email or username
+    const user = await this.userRepository.findOne({
+      where: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
+    });
+
+    if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    // Compare passwords
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // Generate JWT token
     const payload = { username: user.username, email: user.email };
     const token = this.jwtService.sign(payload);
-    return { accessToken: token, message: 'User logged in successfully' };
+
+    return { user, token, message: 'User logged in successfully' };
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
