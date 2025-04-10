@@ -37,6 +37,8 @@ let UserController = class UserController {
 exports.UserController = UserController;
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Register a new user' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'User registered successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Bad Request' }),
     (0, common_1.Post)('register'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -45,6 +47,8 @@ __decorate([
 ], UserController.prototype, "register", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Login a user' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'User logged in successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -52,7 +56,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "login", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: 'Get the currently signed-in users decoded JWT Token' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Get the currently signed-in user' }),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'User data retrieved successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('me'),
     __param(0, (0, common_1.Req)()),

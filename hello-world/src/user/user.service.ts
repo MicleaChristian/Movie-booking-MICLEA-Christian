@@ -18,23 +18,29 @@ export class UserService {
   async register(registerDto: RegisterDto) {
     const { username, email, password } = registerDto;
 
+    // Check if the user already exists
     const userExists = await this.userRepository.findOne({ where: [{ username }, { email }] });
     if (userExists) {
       throw new BadRequestException('User with this username or email already exists');
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create and save the user
     const user = this.userRepository.create({ username, email, password: hashedPassword });
     await this.userRepository.save(user);
 
+    // Generate a token
     const token = this.jwtService.sign({ username, email });
+
     return { message: 'User registered successfully', token };
   }
 
   async login(loginDto: LoginDto) {
     const { usernameOrEmail, password } = loginDto;
 
-    // Find user by email or username
+    // Find the user by email or username
     const user = await this.userRepository.findOne({
       where: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
     });
@@ -43,13 +49,13 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Compare passwords
+    // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Generate JWT token
+    // Generate a JWT token
     const payload = { username: user.username, email: user.email };
     const token = this.jwtService.sign(payload);
 
@@ -57,6 +63,7 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
+    // Find the user by email
     const user = await this.userRepository.findOne({ where: { email } });
     return user || undefined;
   }

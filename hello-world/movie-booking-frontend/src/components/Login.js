@@ -11,12 +11,10 @@ function Login({ setUser }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log('Sending login request:', { usernameOrEmail, password }); // Debugging
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
                 usernameOrEmail,
                 password,
             });
-            console.log('Login response:', response.data); // Debugging
             if (response.data.user) {
                 document.cookie = `token=${response.data.token}; Path=/`; // Store token in a cookie
                 setUser(response.data.user); // Update the user state
@@ -26,7 +24,6 @@ function Login({ setUser }) {
                 throw new Error('User data is missing in the response');
             }
         } catch (err) {
-            console.error('Login error:', err.response?.data || err.message); // Debugging
             setError(err.response?.data?.message || 'Login failed');
         }
     };
@@ -56,7 +53,6 @@ function Login({ setUser }) {
                 </div>
                 <button type="submit">Login</button>
             </form>
-            <button onClick={() => navigate('/register')}>Go to Register</button>
         </div>
     );
 }

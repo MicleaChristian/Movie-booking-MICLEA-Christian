@@ -11,7 +11,7 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/register`, { // Ensure this URL matches your backend
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/register`, {
                 username,
                 email,
                 password,
