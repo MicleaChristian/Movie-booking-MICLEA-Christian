@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MovieModule = void 0;
 const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
+const config_1 = require("@nestjs/config");
 const movie_controller_1 = require("./movie.controller");
 const movie_service_1 = require("./movie.service");
 let MovieModule = class MovieModule {
@@ -16,7 +17,10 @@ let MovieModule = class MovieModule {
 exports.MovieModule = MovieModule;
 exports.MovieModule = MovieModule = __decorate([
     (0, common_1.Module)({
-        imports: [axios_1.HttpModule],
+        imports: [
+            axios_1.HttpModule,
+            config_1.ConfigModule.forRoot(),
+        ],
         controllers: [movie_controller_1.MovieController],
         providers: [movie_service_1.MovieService],
     })
