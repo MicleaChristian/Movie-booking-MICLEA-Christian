@@ -20,17 +20,35 @@ let MovieService = class MovieService {
         this.httpService = httpService;
         this.configService = configService;
     }
-    async getNowPlaying() {
+    async getNowPlaying(page = 1, limit = 10) {
         const apiKey = this.configService.get('TMDB_API_KEY');
-        const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}`;
+        const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&page=${page}`;
         const response = await this.httpService.get(url).toPromise();
-        return response?.data?.results || [];
+        const results = response?.data?.results || [];
+        const totalResults = response?.data?.total_results || 0;
+        const paginatedResults = results.slice(0, limit);
+        return {
+            results: paginatedResults,
+            total: totalResults,
+            page,
+            limit,
+            totalPages: Math.ceil(totalResults / limit)
+        };
     }
-    async searchMovies(query) {
+    async searchMovies(query, page = 1, limit = 10) {
         const apiKey = this.configService.get('TMDB_API_KEY');
-        const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`;
+        const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}&page=${page}`;
         const response = await this.httpService.get(url).toPromise();
-        return response?.data?.results || [];
+        const results = response?.data?.results || [];
+        const totalResults = response?.data?.total_results || 0;
+        const paginatedResults = results.slice(0, limit);
+        return {
+            results: paginatedResults,
+            total: totalResults,
+            page,
+            limit,
+            totalPages: Math.ceil(totalResults / limit)
+        };
     }
 };
 exports.MovieService = MovieService;

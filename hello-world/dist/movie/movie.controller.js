@@ -21,29 +21,38 @@ let MovieController = class MovieController {
     constructor(movieService) {
         this.movieService = movieService;
     }
-    async getNowPlaying() {
-        return this.movieService.getNowPlaying();
+    async getNowPlaying(page, limit) {
+        return this.movieService.getNowPlaying(page, limit);
     }
-    async searchMovies(query) {
-        return this.movieService.searchMovies(query);
+    async searchMovies(query, page, limit) {
+        return this.movieService.searchMovies(query, page, limit);
     }
 };
 exports.MovieController = MovieController;
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get now playing movies' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of now playing movies' }),
+    (0, swagger_1.ApiQuery)({ name: 'page', required: false, type: Number, description: 'Page number' }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number, description: 'Number of items per page' }),
     (0, common_1.Get)('now-playing'),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], MovieController.prototype, "getNowPlaying", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Search for movies' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of movies matching the search query' }),
+    (0, swagger_1.ApiQuery)({ name: 'query', required: true, type: String, description: 'Search query' }),
+    (0, swagger_1.ApiQuery)({ name: 'page', required: false, type: Number, description: 'Page number' }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number, description: 'Number of items per page' }),
     (0, common_1.Get)('search'),
     __param(0, (0, common_1.Query)('query')),
+    __param(1, (0, common_1.Query)('page')),
+    __param(2, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], MovieController.prototype, "searchMovies", null);
 exports.MovieController = MovieController = __decorate([

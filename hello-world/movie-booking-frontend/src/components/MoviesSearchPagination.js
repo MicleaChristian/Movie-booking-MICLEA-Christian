@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
-const MoviesSearchPagination = ({ onSearch, onPageChange, onPageSizeChange }) => {
+const MoviesSearchPagination = ({ onSearch, onPageChange, onPageSizeChange, totalPages = 1, currentPage = 1 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   const handleSearchSubmit = (e) => {
@@ -13,20 +12,20 @@ const MoviesSearchPagination = ({ onSearch, onPageChange, onPageSizeChange }) =>
   const handlePageSizeChange = (e) => {
     const newPageSize = parseInt(e.target.value, 10);
     setPageSize(newPageSize);
-    setCurrentPage(1); // Reset to first page when changing page size
     onPageSizeChange(newPageSize);
+    onPageChange(1); // Reset to first page when changing page size
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
       onPageChange(currentPage - 1);
     }
   };
 
   const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
-    onPageChange(currentPage + 1);
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
   };
 
   return (
@@ -81,10 +80,17 @@ const MoviesSearchPagination = ({ onSearch, onPageChange, onPageSizeChange }) =>
           >
             Previous
           </button>
-          <span className="text-gray-700 mx-2">Page {currentPage}</span>
+          <span className="text-gray-700 mx-2">
+            Page {currentPage} of {totalPages}
+          </span>
           <button
             onClick={handleNextPage}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md ml-2"
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 rounded-md ml-2 ${
+              currentPage === totalPages
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-blue-500 text-white hover:bg-blue-600'
+            }`}
           >
             Next
           </button>

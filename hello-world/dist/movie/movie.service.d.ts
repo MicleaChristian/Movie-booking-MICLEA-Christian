@@ -4,6 +4,6 @@ export declare class MovieService {
     private readonly httpService;
     private readonly configService;
     constructor(httpService: HttpService, configService: ConfigService);
-    getNowPlaying(): Promise<any>;
-    searchMovies(query: string): Promise<any>;
+    getNowPlaying(page?: number, limit?: number): Promise<any>;
+    searchMovies(query: string, page?: number, limit?: number): Promise<any>;
 }
