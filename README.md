@@ -92,7 +92,7 @@ Key components with 100% coverage:
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/MicleaChristian/Movie-booking-MICLEA-Christian.git
 cd Movie-booking-MICLEA-Christian
 ```
 
