@@ -24,33 +24,61 @@ let ReservationService = class ReservationService {
         this.reservationRepository = reservationRepository;
     }
     async create(createReservationDto, user) {
-        const { movieId, movieTitle, startTime } = createReservationDto;
-        const parsedStartTime = new Date(startTime);
-        const endTime = new Date(parsedStartTime);
-        endTime.setHours(endTime.getHours() + this.MOVIE_DURATION_HOURS);
-        const userReservations = await this.reservationRepository.find({
-            where: {
-                userId: user.id,
-                isCancelled: false,
-            },
-        });
-        for (const reservation of userReservations) {
-            const existingStart = new Date(reservation.startTime);
-            const existingEnd = new Date(reservation.endTime);
-            if ((parsedStartTime >= existingStart && parsedStartTime < existingEnd) ||
-                (endTime > existingStart && endTime <= existingEnd) ||
-                (parsedStartTime <= existingStart && endTime >= existingEnd)) {
-                throw new common_1.BadRequestException(`Time conflict with your reservation for ${reservation.movieTitle}. Please choose a different time.`);
+        try {
+            const { movieId, movieTitle, startTime } = createReservationDto;
+            if (!movieId || !movieTitle || !startTime) {
+                throw new common_1.BadRequestException('Missing required fields: movieId, movieTitle, or startTime');
             }
+            if (typeof movieId !== 'number') {
+                throw new common_1.BadRequestException('movieId must be a number');
+            }
+            let parsedStartTime;
+            try {
+                parsedStartTime = new Date(startTime);
+                if (isNaN(parsedStartTime.getTime())) {
+                    throw new Error('Invalid date');
+                }
+            }
+            catch (error) {
+                throw new common_1.BadRequestException('Invalid startTime format');
+            }
+            if (parsedStartTime < new Date()) {
+                throw new common_1.BadRequestException('Cannot create reservations for past times');
+            }
+            const endTime = new Date(parsedStartTime);
+            endTime.setHours(endTime.getHours() + this.MOVIE_DURATION_HOURS);
+            const userReservations = await this.reservationRepository.find({
+                where: {
+                    userId: user.id,
+                    isCancelled: false,
+                },
+            });
+            for (const reservation of userReservations) {
+                const existingStart = new Date(reservation.startTime);
+                const existingEnd = new Date(reservation.endTime);
+                if ((parsedStartTime >= existingStart && parsedStartTime < existingEnd) ||
+                    (endTime > existingStart && endTime <= existingEnd) ||
+                    (parsedStartTime <= existingStart && endTime >= existingEnd)) {
+                    throw new common_1.BadRequestException(`Time conflict with your reservation for ${reservation.movieTitle}. Please choose a different time.`);
+                }
+            }
+            const newReservation = this.reservationRepository.create({
+                userId: user.id,
+                movieId,
+                movieTitle,
+                startTime: parsedStartTime,
+                endTime,
+                isCancelled: false,
+            });
+            return await this.reservationRepository.save(newReservation);
         }
-        const newReservation = this.reservationRepository.create({
-            userId: user.id,
-            movieId,
-            movieTitle,
-            startTime: parsedStartTime,
-            endTime,
-        });
-        return this.reservationRepository.save(newReservation);
+        catch (error) {
+            if (error instanceof common_1.BadRequestException) {
+                throw error;
+            }
+            console.error('Error creating reservation:', error);
+            throw new common_1.InternalServerErrorException('Failed to create reservation. Please try again later.');
+        }
     }
     async findAllByUser(userId) {
         return this.reservationRepository.find({
