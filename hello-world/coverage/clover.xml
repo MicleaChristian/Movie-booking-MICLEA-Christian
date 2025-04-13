@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1744541917630" clover="3.2.0">
-  <project timestamp="1744541917630" name="All files">
-    <metrics statements="267" coveredstatements="209" conditionals="31" coveredconditionals="19" methods="39" coveredmethods="32" elements="337" coveredelements="260" complexity="0" loc="267" ncloc="267" packages="11" files="25" classes="25"/>
+<coverage generated="1744553580309" clover="3.2.0">
+  <project timestamp="1744553580309" name="All files">
+    <metrics statements="268" coveredstatements="210" conditionals="31" coveredconditionals="19" methods="39" coveredmethods="32" elements="338" coveredelements="261" complexity="0" loc="268" ncloc="268" packages="11" files="25" classes="25"/>
     <package name="src">
-      <metrics statements="34" coveredstatements="9" conditionals="6" coveredconditionals="0" methods="5" coveredmethods="3"/>
+      <metrics statements="35" coveredstatements="10" conditionals="6" coveredconditionals="0" methods="5" coveredmethods="3"/>
       <file name="app.controller.ts" path="/Users/christian.miclea/Desktop/Movie-booking-MICLEA-Christian/hello-world/src/app.controller.ts">
-        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
       </file>
       <file name="app.module.ts" path="/Users/christian.miclea/Desktop/Movie-booking-MICLEA-Christian/hello-world/src/app.module.ts">
         <metrics statements="10" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>

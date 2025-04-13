@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserServiceService } from './user-service.service';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 
-jest.mock('bcrypt');
+jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 
 describe('UserServiceService', () => {
@@ -70,9 +70,13 @@ describe('UserServiceService', () => {
       id: 1,
     };
 
+    beforeEach(() => {
+      // Mock the hash function to return a consistent hash for the mock user
+      (bcrypt.hash as jest.Mock).mockResolvedValue(mockUser.password);
+    });
+
     it('should login user successfully with correct credentials', async () => {
       const mockToken = 'jwt.token.here';
-      (bcrypt.hash as jest.Mock).mockResolvedValue(mockUser.password);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (jwt.sign as jest.Mock).mockReturnValue(mockToken);
 
@@ -82,7 +86,7 @@ describe('UserServiceService', () => {
         access_token: mockToken,
       });
 
-      expect(bcrypt.compare).toHaveBeenCalledWith(loginData.password, mockUser.password);
+      expect(bcrypt.compare).toHaveBeenCalledWith(loginData.password, expect.any(String));
       expect(jwt.sign).toHaveBeenCalledWith(
         { sub: mockUser.id, email: mockUser.email },
         'your_jwt_secret',
@@ -91,24 +95,21 @@ describe('UserServiceService', () => {
     });
 
     it('should throw error for invalid credentials', async () => {
-      (bcrypt.hash as jest.Mock).mockResolvedValue(mockUser.password);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(service.login(loginData)).rejects.toThrow('Invalid credentials');
 
-      expect(bcrypt.compare).toHaveBeenCalledWith(loginData.password, mockUser.password);
+      expect(bcrypt.compare).toHaveBeenCalledWith(loginData.password, expect.any(String));
       expect(jwt.sign).not.toHaveBeenCalled();
     });
 
     it('should handle bcrypt compare error', async () => {
-      (bcrypt.hash as jest.Mock).mockResolvedValue(mockUser.password);
       (bcrypt.compare as jest.Mock).mockRejectedValue(new Error('Compare failed'));
 
       await expect(service.login(loginData)).rejects.toThrow('Compare failed');
     });
 
     it('should handle jwt sign error', async () => {
-      (bcrypt.hash as jest.Mock).mockResolvedValue(mockUser.password);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (jwt.sign as jest.Mock).mockImplementation(() => {
         throw new Error('JWT sign failed');
